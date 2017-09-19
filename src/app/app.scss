@@ -23,14 +23,16 @@ td {
 	font-family:  "Comic Sans MS", cursive, sans-serif;
 	font-size:  70px;
 	cursor: pointer;
+	background-color: wheat;
 }
 
 table {
 	border-collapse: collapse;
-	position: absolute;
-	left: 50%;
-	margin-left: -155px;
-	top: 50px;
+	text-align:  center;
+	//position: absolute;
+	//left: 50%;
+	//margin-left: -155px;
+	//top: 50px;
 }
 
 table tr:first-child td {
@@ -62,4 +64,27 @@ table tr td:last-child {
   border-radius: 5px;
   color: white;
   font-size: 2em;
+}
+
+.room{
+	margin: 10px;
+	height: 200px;
+	width: 200px;
+	background-color: wheat;
+	font-size:200px;
+	border: 1px solid black;
+}
+
+.roomWhite{
+	margin: 10px;
+	height: 200px;
+	width: 200px;
+	
+	border: 1px solid wheat;
+}
+.heightBox{
+	margin: 10px;
+	width: 200px;
+	background-color: wheat;
+	color:orangered;
 }

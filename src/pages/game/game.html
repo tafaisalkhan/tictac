@@ -5,35 +5,101 @@
   Ionic pages and navigation.
 -->
 <ion-header>
-
-  <ion-navbar>
-    <ion-title>Game</ion-title>
-  </ion-navbar>
-
-</ion-header>
-
+		<ion-navbar color="primary">
+				<ion-title>Game</ion-title>
+			</ion-navbar>
+		
+	</ion-header>
 
 <ion-content padding>
-  <table>
-		<tr>
-			<td class="cell" (click)="turnClick(0)" id="0"></td>
-			<td class="cell" (click)="turnClick(1)" id="1"></td>
-			<td class="cell" (click)="turnClick(2)" id="2"></td>
-		</tr>
-		<tr>
-			<td class="cell" (click)="turnClick(3)" id="3"></td>
-			<td class="cell" (click)="turnClick(4)" id="4"></td>
-			<td class="cell" (click)="turnClick(5)" id="5"></td>
-		</tr>
-		<tr>
-			<td class="cell" (click)="turnClick(6)" id="6"></td>
-			<td class="cell" (click)="turnClick(7)" id="7"></td>
-			<td class="cell" (click)="turnClick(8)" id="8"></td>
-		</tr>
-	</table>
-	<div class="endgame" *ngIf="result">
-		<div class="text" [innerHTML]="winner"></div>
-	</div>
-	<button (click)="startGame()">Replay</button>
 
+
+		<ion-card>
+				<ion-item style="font-size: small;">
+						
+								Player 1: <span style="font-weight: 900;"> 0</span> 
+							 
+							<div  clear item-end>   Player 2: <span style="font-weight: 900;"> 0</span> </div>
+						</ion-item>
+					
+				
+				</ion-card>
+
+<ion-card>
+		<ion-item >
+				
+					 
+					<div  clear item-end>   <button ion-button small (click)="reStartGame()">Re-Start</button></div>
+				</ion-item>
+		<ion-card-content style="text-align: -webkit-center">
+ <!-- <table [@explainerAnim]= "!loading" (@explainerAnim.done) = "explainerAnimDone($event)" (@explainerAnim.start) = "explainerAnimStarted($event)">-->
+	 <table [@listAnimation]="tableRow.length">
+		<tr	*ngFor="let row of tableRow; let rowIndex = index  " [@listAnimationCell]="tableCell.length">
+				<td	class="cell" *ngFor="let cell of tableCell; let  cellIndex = index  " (click)="turnClick(rowIndex == 0 ? cell : rowIndex == 1 ? cell + rowIndex + 2  : cell + 6, $event) " id="rowIndex == 0 ? cell : rowIndex == 1 ? cell + rowIndex + 2  : cell + 6 ">
+				
+					</td>
+					
+
+		</tr>
+		<!--	<tr>
+			<td class="cell" (click)="turnClick(0)" id="0">1</td>
+			<td class="cell" (click)="turnClick(1)" id="1">2</td>
+			<td class="cell" (click)="turnClick(2)" id="2">3</td>
+		</tr>
+		<tr>
+			<td class="cell" (click)="turnClick(3)" id="3">4</td>
+			<td class="cell" (click)="turnClick(4)" id="4">5</td>
+			<td class="cell" (click)="turnClick(5)" id="5">6</td>
+		</tr>
+		<tr>
+			<td class="cell" (click)="turnClick(6)" id="6">7</td>
+			<td class="cell" (click)="turnClick(7)" id="7">8</td>
+			<td class="cell" (click)="turnClick(8)" id="8">9</td>
+		</tr> -->
+	</table>
+
+	
+</ion-card-content>
+</ion-card>
+
+
+<ion-card class="displayGameOver" [@visibilityGameOver] = "gameOverDiv" color="primary">
+	<ion-card-content>
+		<div  >
+				<div  style="font-size:-webkit-xxx-large"  >
+					{{winner}}
+					
+				</div>
+				<button ion-button color="secondary" (click)="reStartGame()">Play Again</button>
+			</div>
+		</ion-card-content>
+
+</ion-card>
+
+<!--
+	<button (click)="toggleLights()"> ToggleLights</button>
+	<button (click)="toggleHeight()"> ToggleHeight</button>
+	<button (click)="flyInOut()"> FlyinOut</button>
+	<button (click)="roomWhite()"> SlideOut</button>
+	<div *ngIf="showDiv" [@flyInOut]>
+		flyInOut
+	</div>
+
+	<div (@lightsOnOff.done) = "animationDone($event)" (@lightsOnOff.start) = "animationStarted($event)" [@lightsOnOff]="roomState" class='room'>
+		3
+	</div>
+	<div [@heightTrigger]="heightState" [@lightsOnOff]="roomState" class="heightBox">
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+		<br/>
+	</div>
+
+
+	<div  [@slideInOut]="roomWhiteState" class='roomWhite'>
+		Hello world
+	</div>
+-->
 </ion-content>
