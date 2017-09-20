@@ -15,4 +15,17 @@ page-home {
     position: absolute;
     left: inherit;
   }
+
+  .selectedPlayer{
+    //display: none;
+    background-color: wheat;
+    transform:translateY(-800%);
+    top: 50%;
+    position: absolute;
+    text-align: -webkit-center;
+    left: inherit;
+    height: 35%;
+    //padding-top: 30px;;
+   
+  }
 }

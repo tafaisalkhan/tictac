@@ -1,5 +1,6 @@
 import { Component, trigger, state, style, transition, animate, keyframes, group } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { GameProvider } from '../../providers/game/game';
 
 /**
  * Generated class for the HomePage page.
@@ -22,13 +23,21 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
       state('shown' , style({ opacity: 1, display: 'block',  transform:'translateX(0)'  })),
       state('hidden', style({ opacity: 0, display: 'none', transform:'translateX(100%)' })),
       transition('* => *', animate('1s'))
-    ])
+    ]),
+    trigger('visibilityPlayer', [
+      state('shown' , style({ opacity: 1, display: 'block' ,  transform:'translateY(-50%)'})),
+      state('hidden', style({ opacity: 1, display: 'none' , transform:'translateY(-800%)' })),
+      transition('* => *', animate('1s'))
+    ]),
   ]
 })
 export class HomePage {
   gameOption;// = 'hidden';
   gameTypeOption = 'shown';
-  constructor( public navCtrl: NavController, public navParams: NavParams) {
+  showPlayerCard = "hidden"
+  selectedPlayer: number = 0;
+  selectType: number = 0;
+  constructor( public navCtrl: NavController, public navParams: NavParams, public gameProvider:GameProvider) {
   }
 
   ionViewDidLoad() {
@@ -43,7 +52,9 @@ export class HomePage {
   }
 
   playOptions(type){
-    if(type == 4)
+    this.showPlayerCard = "shown";
+    this.selectType = type;
+  /*  if(type == 4)
     {
       this.gameOption = 'hidden';
       this.gameTypeOption = 'shown';
@@ -53,7 +64,32 @@ export class HomePage {
       this.gameOption = 'hidden';
       this.gameTypeOption = 'shown';
     }
+    */
     //this.navCtrl.push('GamePage');
     //this.gameTypeOption = 'show';
+  }
+  startGame(){
+    if(this.selectType == 4)
+    {
+      this.gameOption = 'hidden';
+      this.gameTypeOption = 'shown';
+    }
+    else if(this.selectType == 1){
+      this.navCtrl.push('GamePage');
+      this.gameOption = 'hidden';
+      this.gameTypeOption = 'shown';
+    }
+    this.showPlayerCard = 'hidden';
+
+    if(this.selectType == 0){
+      this.gameProvider.huPlayer = "O";
+      this.gameProvider.aiPlayer = "X";
+    }
+    else{
+      this.gameProvider.huPlayer = "X";
+      this.gameProvider.aiPlayer = "O";
+    }
+     
+
   }
 }

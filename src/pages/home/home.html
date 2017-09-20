@@ -31,4 +31,29 @@
       </ion-card-content>
     
     </ion-card>
+    <ion-card [@visibilityPlayer] = "showPlayerCard" class="selectedPlayer">   
+        <ion-card-content>
+            <ion-list radio-group [(ngModel)]="selectedPlayer">
+                
+                      <ion-list-header>
+                        Select Your Player
+                      </ion-list-header>
+                
+                      <ion-item style="background-color: wheat">
+                        <ion-label>O</ion-label>
+                        <ion-radio value="0" ></ion-radio>
+                      </ion-item>
+                      <ion-item style="background-color: wheat">
+                        <ion-label>X</ion-label>
+                        <ion-radio value="1"></ion-radio>
+                      </ion-item>
+                     
+                    </ion-list>
+                    <div  >
+                    
+                        <button ion-button color="secondary" (click)="startGame()">Done</button>
+                      </div>          
+        </ion-card-content>
+      
+      </ion-card>
 </ion-content>
