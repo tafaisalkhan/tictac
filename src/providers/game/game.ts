@@ -12,6 +12,7 @@ export class GameProvider {
   huPlayer: string = 'O';
   aiPlayer: string = 'X';
   type: string = 'double'
+  gameType: string = "easy";
   winCombos = [
     [0, 1, 2],
     [3, 4, 5],

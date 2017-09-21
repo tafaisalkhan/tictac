@@ -158,6 +158,8 @@ export class GamePage {
   playerOneScore: number = 0;
   playerTwoScore: number = 0;
   tie:boolean = true;
+  normalGameAITrue: boolean = true;
+  tieCount: number = 0;
   constructor(public navCtrl: NavController, public navParams: NavParams, public gameProvider:GameProvider) {
   }
 
@@ -175,6 +177,7 @@ export class GamePage {
     this.tableCell = [];
     setTimeout(() => {
       this. startGame();
+      this.playerTrue = !this.playerTrue;
     }, 1000);
     
   }
@@ -200,6 +203,7 @@ startGame(){
       this.cells[i].style.removeProperty('background-color');
       //this.cells[i].addEventListener('click', this.turnClick, false);
     }
+    
 }
 
 helloWord(event){
@@ -210,24 +214,56 @@ turnClick(id, element){
     if(!this.result && !this.loading){
       if (typeof this.gameProvider.origBoard[id] == 'number') {
         if (!this.checkWin(this.gameProvider.origBoard, this.gameProvider.huPlayer)) {
-          if(this.playerTrue){
-              this.turn(id, this.gameProvider.huPlayer,element.srcElement )
-              this.playerTrue = !this.playerTrue;
-             // this.aiTrunClick();
+         
+          if(this.gameProvider.type == "double"){
+              if(this.playerTrue){
+                this.turn(id, this.gameProvider.huPlayer,element.srcElement )
+                this.playerTrue = !this.playerTrue;
+              // this.aiTrunClick();
 
-              //this.turn(this.bestSpot(), this.gameProvider.huPlayer, null);
-              //var bestPosition = this.bestSpot();
-              //this.turn(bestPosition, this.gameProvider.aiPlayer, element.srcElement)
-              //this.playerTrue = !this.playerTrue;
+                //this.turn(this.bestSpot(), this.gameProvider.huPlayer, null);
+                //var bestPosition = this.bestSpot();
+                //this.turn(bestPosition, this.gameProvider.aiPlayer, element.srcElement)
+                //this.playerTrue = !this.playerTrue;
 
-            }
-          else { 
-            
-              this.turn(id, this.gameProvider.aiPlayer, element.srcElement)
-              this.playerTrue = !this.playerTrue;
-              //this.aiTrunClick();
-              // this.turn(this.bestSpot(), this.gameProvider.aiPlayer);
-            }
+              }
+            else { 
+              
+                this.turn(id, this.gameProvider.aiPlayer, element.srcElement)
+                this.playerTrue = !this.playerTrue;
+                //this.aiTrunClick();
+                // this.turn(this.bestSpot(), this.gameProvider.aiPlayer);
+              }
+           }
+           else  {
+             if(this.gameProvider.gameType == "hard"){
+              this.turn(id, this.gameProvider.huPlayer,element.srcElement );
+              this.aiTrunClick();
+             }
+             else if (this.gameProvider.gameType == "normal"){
+                this.turn(id, this.gameProvider.huPlayer,element.srcElement );
+                if(this.playerOneScore % 2 == 0  && this.playerOneScore > 0 && this.tieCount % 2 == 0 ){
+                  this.aiTrunClick();
+                }
+                else{
+                    if(this.normalGameAITrue){
+                      this.aiTrunClick();
+                      this.normalGameAITrue = !this.normalGameAITrue;
+                    }
+                    else{
+                      this.turn(this.gameProvider.origBoard[this.generateRandomNo()], this.gameProvider.aiPlayer, element.srcElement)
+                      this.normalGameAITrue = !this.normalGameAITrue
+                    }
+                }
+                //this.aiTrunClick();
+             }
+             else{
+                this.turn(id, this.gameProvider.huPlayer,element.srcElement );    
+                this.turn(this.generateRandomNo(), this.gameProvider.aiPlayer, element.srcElement)
+                //if (typeof this.gameProvider.origBoard[id] == 'number'))
+                //this.aiTrunClick();
+             }
+           }
             if(this.emptySquares().length == 0 && this.tie){
               this.checkTie();
             }
@@ -248,6 +284,19 @@ turnClick(id, element){
 
 		if (!this.checkWin(this.gameProvider.origBoard, this.gameProvider.huPlayer) && !this.checkTie()) this.turn(this.bestSpot(), this.gameProvider.aiPlayer, null);
 	
+}
+
+generateRandomNo(){
+  let ramArray = [];
+  for (var i = 0 ; i<= this.gameProvider.origBoard.length; i++ ){
+    if (typeof this.gameProvider.origBoard[i] == 'number'){
+      ramArray.push(this.gameProvider.origBoard[i]);
+    }
+        
+  } 
+  var ran = Math.floor((Math.random() * ramArray.length));
+  var tmp = ramArray[ran]
+  return tmp;
 }
 
 turn(squareId, player, element) {
@@ -325,6 +374,7 @@ checkTie() {
             this.tie = true;
           }
         this.declareWinner("Tie Game!")
+        this.tieCount = this.tieCount + 1; 
         this.gameOverDiv = "shown";
           return true;
         }
@@ -370,6 +420,16 @@ animationStarted(event){
   
 }
 
+listAnimationDone(event){
+  console.log(event.toState);
+  if(this.gameProvider.type != "double"){
+    if(event.toState == 3 && this.playerTrue){
+      this.turn(2, this.gameProvider.aiPlayer,null );
+    }
+  }
+
+  //
+}
 explainerAnimStarted(event){
   //this.loading = true;
 }

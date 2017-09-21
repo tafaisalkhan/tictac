@@ -49,11 +49,29 @@ export class HomePage {
   playType(type){
       this.gameTypeOption = 'hidden';
       this.gameOption = 'shown';
+      if(type == 1){
+        this.gameProvider.type = "single";
+      }
+      else{
+        this.gameProvider.type = "double";
+      }
   }
 
   playOptions(type){
     this.showPlayerCard = "shown";
     this.selectType = type;
+    if(this.selectType == 1)
+    {
+      this.gameProvider.gameType = "easy";
+    }
+    else if(this.selectType == 2)
+    {
+      this.gameProvider.gameType = "normal";
+    }
+    else if(this.selectType == 3)
+    {
+      this.gameProvider.gameType = "hard";
+    }
   /*  if(type == 4)
     {
       this.gameOption = 'hidden';
@@ -74,14 +92,15 @@ export class HomePage {
       this.gameOption = 'hidden';
       this.gameTypeOption = 'shown';
     }
-    else if(this.selectType == 1){
+    else {
+  
       this.navCtrl.push('GamePage');
       this.gameOption = 'hidden';
       this.gameTypeOption = 'shown';
     }
     this.showPlayerCard = 'hidden';
 
-    if(this.selectType == 0){
+    if(this.selectedPlayer == 0){
       this.gameProvider.huPlayer = "O";
       this.gameProvider.aiPlayer = "X";
     }
