@@ -186,20 +186,14 @@ export class GamePage {
 
 
   play(filename){
+   
       this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
-
-      // to listen to plugin events:
-
       this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
-
       this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
         );
-
       this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
-
-      // play the file
       this.file.play();
-
+      
      }
 
   stopPlaying(){
@@ -242,8 +236,8 @@ helloWord(event){
 }
 
 turnClick(id, element){
-  this.play("tap.mp3")
     if(!this.result && !this.loading){
+      this.play("tap.mp3")
       if (typeof this.gameProvider.origBoard[id] == 'number') {
         if (!this.checkWin(this.gameProvider.origBoard, this.gameProvider.huPlayer)) {
          
@@ -383,12 +377,19 @@ isBigEnough(element, index, array) {
 declareWinner(who) {
   
      if(who == "You win!"){
+       
         this.play("win.mp3")
         this.playerOneScore = this.playerOneScore + 1;
         this.tie = false;
      }
      else if(who == "You lose."){
+      if(this.gameProvider.type == "double"){
+        this.play("win.mp3")
+      }
+      else{
         this.play("loss.mp3")
+      }
+        
         this.playerTwoScore = this.playerTwoScore + 1;
         this.tie = false;
      }

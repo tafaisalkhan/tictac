@@ -55,42 +55,17 @@ export class HomePage {
 
 
   play(filename){
-    
-    if(this.isPlay){
-      this.file.pause();
-      this.file.release();
+ 
+      this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
+      this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+      this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
+        );
+      this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
+      this.file.play();
+   
     }
-    else{
-
-          this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
-
-          // to listen to plugin events:
-
-          this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
-
-          this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
-            );
-
-          this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
-
-          // play the file
-          this.file.play();
-      }
-     this.isPlay = !this.isPlay;
     
 
-     }
-
-  stopPlaying(){
-      this.isPlay = false;
-        
-        try{
-          this.file.pause();
-        }
-        catch(e){
-          
-        }
-    }
   playType(type){
     this.play("tap.mp3")
       
