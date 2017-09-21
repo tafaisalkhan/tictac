@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { state, group, trigger,style,transition,animate,keyframes,query,stagger } from '@angular/animations';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { GameProvider } from '../../providers/game/game';
-
+import { Media, MediaObject } from '@ionic-native/media';
 /**
  * Generated class for the GamePage page.
  *
@@ -160,7 +160,9 @@ export class GamePage {
   tie:boolean = true;
   normalGameAITrue: boolean = true;
   tieCount: number = 0;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public gameProvider:GameProvider) {
+  isPlay: boolean = false;
+  file: MediaObject;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public gameProvider:GameProvider, private media: Media) {
   }
 
   ionViewDidLoad() {
@@ -182,8 +184,37 @@ export class GamePage {
     
   }
 
+
+  play(filename){
+      this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
+
+      // to listen to plugin events:
+
+      this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+
+      this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
+        );
+
+      this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
+
+      // play the file
+      this.file.play();
+
+     }
+
+  stopPlaying(){
+   
+        try{
+          this.file.pause();
+        }
+        catch(e){
+          
+        }
+    }
+
 startGame(){
     this.tie = true;
+   
     this.tableRow.push(0);
     this.tableRow.push(1);
     this.tableRow.push(2);
@@ -211,6 +242,7 @@ helloWord(event){
 }
 
 turnClick(id, element){
+  this.play("tap.mp3")
     if(!this.result && !this.loading){
       if (typeof this.gameProvider.origBoard[id] == 'number') {
         if (!this.checkWin(this.gameProvider.origBoard, this.gameProvider.huPlayer)) {
@@ -300,11 +332,16 @@ generateRandomNo(){
 }
 
 turn(squareId, player, element) {
+  try{
     this.gameProvider.origBoard[squareId] = player;
     //element.innerText = player;
     document.getElementById(squareId).innerText = player;
     let gameWon = this.checkWin(this.gameProvider.origBoard, player)
     if (gameWon) this.gameOver(gameWon)
+  }
+  catch(e){
+
+  }
 }
 
   checkWin(board, player) {
@@ -344,11 +381,14 @@ isBigEnough(element, index, array) {
     //return 0
  }
 declareWinner(who) {
+  
      if(who == "You win!"){
+        this.play("win.mp3")
         this.playerOneScore = this.playerOneScore + 1;
         this.tie = false;
      }
      else if(who == "You lose."){
+        this.play("loss.mp3")
         this.playerTwoScore = this.playerTwoScore + 1;
         this.tie = false;
      }
@@ -374,6 +414,7 @@ checkTie() {
             this.tie = true;
           }
         this.declareWinner("Tie Game!")
+       this.play("loss.mp3")
         this.tieCount = this.tieCount + 1; 
         this.gameOverDiv = "shown";
           return true;

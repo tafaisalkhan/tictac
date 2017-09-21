@@ -1,6 +1,7 @@
 import { Component, trigger, state, style, transition, animate, keyframes, group } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { GameProvider } from '../../providers/game/game';
+import { Media, MediaObject } from '@ionic-native/media';
 
 /**
  * Generated class for the HomePage page.
@@ -37,40 +38,95 @@ export class HomePage {
   showPlayerCard = "hidden"
   selectedPlayer: number = 0;
   selectType: number = 0;
-  constructor( public navCtrl: NavController, public navParams: NavParams, public gameProvider:GameProvider) {
+  isPlay: boolean = false;
+  file: MediaObject;
+  constructor( public navCtrl: NavController, public navParams: NavParams, public gameProvider:GameProvider, private media: Media) {
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad HomePage');
-    //this.navCtrl.push('GamePage');
-    //this.navCtrl.push(GamePage);
+    
+  }
+  
+  ionViewWillEnter(){
+    this.gameOption = 'hidden';
+    this.gameTypeOption = 'shown';
+    this.showPlayerCard = 'hidden';
   }
 
+
+  play(filename){
+    
+    if(this.isPlay){
+      this.file.pause();
+      this.file.release();
+    }
+    else{
+
+          this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
+
+          // to listen to plugin events:
+
+          this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+
+          this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
+            );
+
+          this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
+
+          // play the file
+          this.file.play();
+      }
+     this.isPlay = !this.isPlay;
+    
+
+     }
+
+  stopPlaying(){
+      this.isPlay = false;
+        
+        try{
+          this.file.pause();
+        }
+        catch(e){
+          
+        }
+    }
   playType(type){
-      this.gameTypeOption = 'hidden';
-      this.gameOption = 'shown';
+    this.play("tap.mp3")
+      
       if(type == 1){
         this.gameProvider.type = "single";
+        this.gameTypeOption = 'hidden';
+        this.gameOption = 'shown';
       }
       else{
         this.gameProvider.type = "double";
+        this.showPlayerCard = "shown";
       }
   }
 
   playOptions(type){
-    this.showPlayerCard = "shown";
+    this.play("tap.mp3")
     this.selectType = type;
     if(this.selectType == 1)
     {
       this.gameProvider.gameType = "easy";
+      this.showPlayerCard = "shown";
     }
     else if(this.selectType == 2)
     {
       this.gameProvider.gameType = "normal";
+      this.showPlayerCard = "shown";
     }
     else if(this.selectType == 3)
     {
       this.gameProvider.gameType = "hard";
+      this.showPlayerCard = "shown";
+    }
+    else if(this.selectType == 4)
+    {
+      this.gameOption = 'hidden';
+      this.gameTypeOption = 'shown';
     }
   /*  if(type == 4)
     {
@@ -87,6 +143,7 @@ export class HomePage {
     //this.gameTypeOption = 'show';
   }
   startGame(){
+    this.play("tap.mp3")
     if(this.selectType == 4)
     {
       this.gameOption = 'hidden';
@@ -95,10 +152,10 @@ export class HomePage {
     else {
   
       this.navCtrl.push('GamePage');
-      this.gameOption = 'hidden';
-      this.gameTypeOption = 'shown';
+      //this.gameOption = 'hidden';
+      //this.gameTypeOption = 'shown';
     }
-    this.showPlayerCard = 'hidden';
+    //this.showPlayerCard = 'hidden';
 
     if(this.selectedPlayer == 0){
       this.gameProvider.huPlayer = "O";
