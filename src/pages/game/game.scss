@@ -26,6 +26,8 @@ page-game {
       .displayLossGameOver{
         //display: none;
         transform:translateY(-800%);
+        opacity: 0;
+        display: none;
         top: 50%;
         position: absolute;
         text-align: -webkit-center;

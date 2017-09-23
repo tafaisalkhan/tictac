@@ -135,7 +135,7 @@ import { Media, MediaObject } from '@ionic-native/media';
     ]),
     trigger('visibilityGameOver', [
       state('shown' , style({ opacity: 1, display: 'block' ,  transform:'translateY(0%)'})),
-      state('hidden', style({ opacity: 1, display: 'none' , transform:'translateY(-800%)' })),
+      state('hidden', style({ opacity: 1, display: 'block' , transform:'translateY(-800%)' })),
       transition('* => *', animate('1s'))
     ]),
   ]
@@ -174,25 +174,28 @@ export class GamePage {
   }
 
   reStartGame(){
-    this.tie = true;
-    this.tableRow = [];
-    this.tableCell = [];
-    setTimeout(() => {
-      this. startGame();
-      this.playerTrue = !this.playerTrue;
-    }, 1000);
+    this.roomState = "on";
+    this.roomWhiteState = this.roomWhiteState  === 'out' ? 'in' : 'out';
+    //this.tie = true;
+    //this.tableRow = [];
+    //this.tableCell = [];
+    //setTimeout(() => {
+     // this. startGame();
+     // this.playerTrue = !this.playerTrue;
+    //}, 1000);
     
   }
 
 
   play(filename){
    
-      this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
-      this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
-      this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
-        );
-      this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
-      this.file.play();
+     // this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
+    //  this.file = this.media.create('assets/mp3/'+filename);
+   //  this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+   //   this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
+   //     );
+   //   this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
+   //   this.file.play();
       
      }
 
@@ -375,25 +378,25 @@ isBigEnough(element, index, array) {
     //return 0
  }
 declareWinner(who) {
+  if(this.gameProvider.type == "double"){
+    this.play("win.mp3")
+  }
+  else{
+    this.play("loss.mp3")
+  }
+  if(who == "You win!"){
+    
+    this.play("win.mp3")
+    this.playerOneScore = this.playerOneScore + 1;
+    this.tie = false;
+  }
+  else if(who == "You lose."){
+    this.play("loss.mp3")
+    
+    this.playerTwoScore = this.playerTwoScore + 1;
+    this.tie = false;
+  }
   
-     if(who == "You win!"){
-       
-        this.play("win.mp3")
-        this.playerOneScore = this.playerOneScore + 1;
-        this.tie = false;
-     }
-     else if(who == "You lose."){
-      if(this.gameProvider.type == "double"){
-        this.play("win.mp3")
-      }
-      else{
-        this.play("loss.mp3")
-      }
-        
-        this.playerTwoScore = this.playerTwoScore + 1;
-        this.tie = false;
-     }
-     
     
      this.winner = who
      this.result = true;

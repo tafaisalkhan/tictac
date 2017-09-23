@@ -35,9 +35,11 @@
 		<ion-card-content style="text-align: -webkit-center">
  <!-- <table [@explainerAnim]= "!loading" (@explainerAnim.done) = "explainerAnimDone($event)" (@explainerAnim.start) = "explainerAnimStarted($event)">-->
 	 <table [@listAnimation]="tableRow.length" (@listAnimation.done) = "listAnimationDone($event)" >
-		<tr	*ngFor="let row of tableRow; let rowIndex = index  " [@listAnimationCell]="tableCell.length">
-				<td	class="cell" *ngFor="let cell of tableCell; let  cellIndex = index;  " (click)="turnClick(rowIndex == 0 ? cell : rowIndex == 1 ? cell + rowIndex + 2  : cell + 6, $event) " id="{{rowIndex == 0 ? cell : rowIndex == 1 ? cell + rowIndex + 2  : cell + 6}}">
-					
+		<tr 	*ngFor="let row of tableRow; let rowIndex = index  " [@listAnimationCell]="tableCell.length">
+				<td	 class="cell" *ngFor="let cell of tableCell; let  cellIndex = index;  " (click)="turnClick(rowIndex == 0 ? cell : rowIndex == 1 ? cell + rowIndex + 2  : cell + 6, $event) " id="{{rowIndex == 0 ? cell : rowIndex == 1 ? cell + rowIndex + 2  : cell + 6}}">
+					<div [@slideInOut]="roomWhiteState">
+						d
+					</div>
 					</td>
 					
 

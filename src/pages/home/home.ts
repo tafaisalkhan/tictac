@@ -56,12 +56,13 @@ export class HomePage {
 
   play(filename){
  
-      this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
-      this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
-      this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
-        );
-      this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
-      this.file.play();
+      //this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
+    //  this.file = this.media.create('assets/mp3/'+filename);
+     // this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+     // this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
+     //   );
+     // this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
+    //  this.file.play();
    
     }
     
