@@ -54,17 +54,32 @@ export class HomePage {
   }
 
 
+
   play(filename){
- 
+    try{
+     
+      this.file.release();
+    }
+    catch(e){
+
+    } 
       this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
-      this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
-      this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
+      this.file.onStatusUpdate.subscribe(status => {
+        console.log(status +"1");
+      console.log("status update")}); // fires when file status changes
+      this.file.onSuccess.subscribe(() => { console.log('Action is successful');  setTimeout(() => {
+        this.file.release();
+      }, 1000);}
         );
-      this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
+      this.file.onError.subscribe(error => { console.log('Error!', error); this.file.stop(); this.file.release()} );
       this.file.play();
    
     }
     
+    ionViewWillLeave(){
+      this.file.release();
+    }
+  
 
   playType(type){
     this.play("tap.mp3")

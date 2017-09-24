@@ -3,6 +3,7 @@ import { state, group, trigger,style,transition,animate,keyframes,query,stagger 
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { GameProvider } from '../../providers/game/game';
 import { Media, MediaObject } from '@ionic-native/media';
+import { LoadingController } from 'ionic-angular';
 /**
  * Generated class for the GamePage page.
  *
@@ -162,15 +163,17 @@ export class GamePage {
   tieCount: number = 0;
   isPlay: boolean = false;
   file: MediaObject;
-  constructor(public navCtrl: NavController, public navParams: NavParams, public gameProvider:GameProvider, private media: Media) {
+  fileTic: MediaObject;
+  loader: any;
+  constructor(public navCtrl: NavController, public navParams: NavParams, public gameProvider:GameProvider, private media: Media, public loadingCtrl: LoadingController) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad GamePage');
     this.cells = document.querySelectorAll('.cell');
     //console.log(this.cells);
-    
     this.startGame();
+    
   }
 
   reStartGame(){
@@ -184,31 +187,83 @@ export class GamePage {
     
   }
 
+  presentLoading() {
+    this.loader = this.loadingCtrl.create({
+      content: "Computer True...",
+      
+    });
+    this.loader.present();
+  }
+  ionViewWillLeave(){
+    this.file.release();
+    this.fileTic.release();
+  }
+
+ionViewWillEnter()
+{
+  
+    //setTimeout(this.bestSpot(), 500);
+  
+}
+
+
 
   play(filename){
-   
+    try{
+      
+      this.file.release();
+    }
+    catch(e){
+
+    } 
       this.file = this.media.create('/android_asset/www/assets/mp3/'+filename);
       this.file.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
-      this.file.onSuccess.subscribe(() => { console.log('Action is successful'); this.isPlay = false}
-        );
-      this.file.onError.subscribe(error => { console.log('Error!', error); this.isPlay = false} );
-      this.file.play();
-      
-     }
-
-  stopPlaying(){
-   
-        try{
-          this.file.pause();
-        }
-        catch(e){
-          
-        }
+      this.file.onSuccess.subscribe(() => { console.log('Action is successful'); 
+      setTimeout(() => {
+        this.file.release();
+      }, 3000);
     }
+        );
+      this.file.onError.subscribe(error => { 
+        
+        console.log('Error!', error); 
+        this.file.stop();
+        this.file.release()} 
+
+    );
+      this.file.play();
+     
+  }
+  playTic(filename){
+    try{
+      
+      this.file.release();
+    }
+    catch(e){
+
+    } 
+      this.fileTic = this.media.create('/android_asset/www/assets/mp3/'+filename);
+      this.fileTic.onStatusUpdate.subscribe(status => console.log(status)); // fires when file status changes
+      this.fileTic.onSuccess.subscribe(() => { console.log('Action is successful');
+      setTimeout(() => {
+        this.fileTic.release();
+      }, 3000);
+    });
+      this.fileTic.onError.subscribe(error => { 
+        
+        console.log('Error!', error); 
+        this.fileTic.stop()
+        this.fileTic.release()} 
+
+    );
+      this.fileTic.play();
+     
+  }
+
 
 startGame(){
     this.tie = true;
-   
+    
     this.tableRow.push(0);
     this.tableRow.push(1);
     this.tableRow.push(2);
@@ -229,6 +284,7 @@ startGame(){
       //this.cells[i].addEventListener('click', this.turnClick, false);
     }
     
+      
 }
 
 helloWord(event){
@@ -237,7 +293,7 @@ helloWord(event){
 
 turnClick(id, element){
     if(!this.result && !this.loading){
-      this.play("tap.mp3")
+      this.playTic("tap.mp3")
       if (typeof this.gameProvider.origBoard[id] == 'number') {
         if (!this.checkWin(this.gameProvider.origBoard, this.gameProvider.huPlayer)) {
          
@@ -263,21 +319,66 @@ turnClick(id, element){
            }
            else  {
              if(this.gameProvider.gameType == "hard"){
+            
+              this.presentLoading();
               this.turn(id, this.gameProvider.huPlayer,element.srcElement );
-              this.aiTrunClick();
+             
+              setTimeout(() => {
+                this.aiTrunClick();
+                if(this.emptySquares().length == 0 && this.tie){
+                  this.checkTie();
+                }
+                else if  (this.emptySquares().length == 0){
+                  this.checkTie();
+                }
+                this.loader.dismiss();
+              }, 1000);
+             
              }
              else if (this.gameProvider.gameType == "normal"){
                 this.turn(id, this.gameProvider.huPlayer,element.srcElement );
                 if(this.playerOneScore % 2 == 0  && this.playerOneScore > 0 && this.tieCount % 2 == 0 ){
-                  this.aiTrunClick();
+                  this.presentLoading();
+                  setTimeout(() => {
+                    this.aiTrunClick();
+                    if(this.emptySquares().length == 0 && this.tie){
+                      this.checkTie();
+                    }
+                    else if  (this.emptySquares().length == 0){
+                      this.checkTie();
+                    }
+                    this.loader.dismiss();
+                  }, 1000);
                 }
                 else{
                     if(this.normalGameAITrue){
-                      this.aiTrunClick();
+                      this.presentLoading();
+                      setTimeout(() => {
+                        this.aiTrunClick();
+                        if(this.emptySquares().length == 0 && this.tie){
+                          this.checkTie();
+                        }
+                        else if  (this.emptySquares().length == 0){
+                          this.checkTie();
+                        }
+                        this.loader.dismiss();
+                      }, 1000);
                       this.normalGameAITrue = !this.normalGameAITrue;
                     }
                     else{
-                      this.turn(this.gameProvider.origBoard[this.generateRandomNo()], this.gameProvider.aiPlayer, element.srcElement)
+                      
+                      //this.turn(this.gameProvider.origBoard[this.generateRandomNo()], this.gameProvider.aiPlayer, element.srcElement)
+                      this.presentLoading();
+                      setTimeout(() => {
+                        this.turn(this.gameProvider.origBoard[this.generateRandomNo()], this.gameProvider.aiPlayer, element.srcElement)
+                        if(this.emptySquares().length == 0 && this.tie){
+                          this.checkTie();
+                        }
+                        else if  (this.emptySquares().length == 0){
+                          this.checkTie();
+                        }
+                        this.loader.dismiss();
+                      }, 1000);
                       this.normalGameAITrue = !this.normalGameAITrue
                     }
                 }
@@ -285,12 +386,26 @@ turnClick(id, element){
              }
              else{
                 this.turn(id, this.gameProvider.huPlayer,element.srcElement );    
-                this.turn(this.generateRandomNo(), this.gameProvider.aiPlayer, element.srcElement)
+                //this.turn(this.generateRandomNo(), this.gameProvider.aiPlayer, element.srcElement)
+                this.presentLoading();
+                setTimeout(() => {
+                  this.turn(this.generateRandomNo(), this.gameProvider.aiPlayer, element.srcElement)
+                  if(this.emptySquares().length == 0 && this.tie){
+                    this.checkTie();
+                  }
+                  else if  (this.emptySquares().length == 0){
+                    this.checkTie();
+                  }
+                  this.loader.dismiss();
+                }, 1000);
                 //if (typeof this.gameProvider.origBoard[id] == 'number'))
                 //this.aiTrunClick();
              }
            }
             if(this.emptySquares().length == 0 && this.tie){
+              this.checkTie();
+            }
+            else if  (this.emptySquares().length == 0){
               this.checkTie();
             }
            
@@ -324,6 +439,7 @@ generateRandomNo(){
   var tmp = ramArray[ran]
   return tmp;
 }
+
 
 turn(squareId, player, element) {
   try{
@@ -377,14 +493,22 @@ isBigEnough(element, index, array) {
 declareWinner(who) {
   
      if(who == "You win!"){
-       
+      if(this.gameProvider.type == "double"){
         this.play("win.mp3")
+        who = "Player 1 Win";
+       
+      }
+      else{
+        this.play("win.mp3")
+       
+    }
         this.playerOneScore = this.playerOneScore + 1;
         this.tie = false;
      }
      else if(who == "You lose."){
       if(this.gameProvider.type == "double"){
         this.play("win.mp3")
+        who = "Player 2 Win";
       }
       else{
         this.play("loss.mp3")
@@ -443,6 +567,7 @@ roomWhite(){
 }
 bestSpot() {
     //return 3;
+    
     return this.minimax(this.gameProvider.origBoard, this.gameProvider.aiPlayer).index;
   }
 
@@ -478,7 +603,7 @@ explainerAnimStarted(event){
 explainerAnimDone(event){
   //this.loading = false;
 }
-minimax(newBoard, player) {
+ minimax(newBoard, player) {
   var availSpots = this.emptySquares();
 
   if (this.checkWin(newBoard, this.gameProvider.huPlayer)) {

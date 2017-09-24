@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 */
 @Injectable()
 export class GameProvider {
-  origBoard;
+  origBoard: number[]  = Array.from(Array(9).keys());
   huPlayer: string = 'O';
   aiPlayer: string = 'X';
   type: string = 'double'
