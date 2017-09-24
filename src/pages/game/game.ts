@@ -301,20 +301,12 @@ turnClick(id, element){
               if(this.playerTrue){
                 this.turn(id, this.gameProvider.huPlayer,element.srcElement )
                 this.playerTrue = !this.playerTrue;
-              // this.aiTrunClick();
-
-                //this.turn(this.bestSpot(), this.gameProvider.huPlayer, null);
-                //var bestPosition = this.bestSpot();
-                //this.turn(bestPosition, this.gameProvider.aiPlayer, element.srcElement)
-                //this.playerTrue = !this.playerTrue;
 
               }
-            else { 
-              
+            else {           
                 this.turn(id, this.gameProvider.aiPlayer, element.srcElement)
                 this.playerTrue = !this.playerTrue;
-                //this.aiTrunClick();
-                // this.turn(this.bestSpot(), this.gameProvider.aiPlayer);
+               
               }
            }
            else  {
@@ -323,62 +315,26 @@ turnClick(id, element){
               this.presentLoading();
               this.turn(id, this.gameProvider.huPlayer,element.srcElement );
              
-              setTimeout(() => {
-                this.aiTrunClick();
-                if(this.emptySquares().length == 0 && this.tie){
-                  this.checkTie();
-                }
-                else if  (this.emptySquares().length == 0){
-                  this.checkTie();
-                }
-                this.loader.dismiss();
-              }, 1000);
+              this.checkTieWhenTic();
              
              }
              else if (this.gameProvider.gameType == "normal"){
                 this.turn(id, this.gameProvider.huPlayer,element.srcElement );
                 if(this.playerOneScore % 2 == 0  && this.playerOneScore > 0 && this.tieCount % 2 == 0 ){
                   this.presentLoading();
-                  setTimeout(() => {
-                    this.aiTrunClick();
-                    if(this.emptySquares().length == 0 && this.tie){
-                      this.checkTie();
-                    }
-                    else if  (this.emptySquares().length == 0){
-                      this.checkTie();
-                    }
-                    this.loader.dismiss();
-                  }, 1000);
+                  this.checkTieWhenTic();
                 }
                 else{
                     if(this.normalGameAITrue){
                       this.presentLoading();
-                      setTimeout(() => {
-                        this.aiTrunClick();
-                        if(this.emptySquares().length == 0 && this.tie){
-                          this.checkTie();
-                        }
-                        else if  (this.emptySquares().length == 0){
-                          this.checkTie();
-                        }
-                        this.loader.dismiss();
-                      }, 1000);
+                      this.checkTieWhenTic();
                       this.normalGameAITrue = !this.normalGameAITrue;
                     }
                     else{
                       
                       //this.turn(this.gameProvider.origBoard[this.generateRandomNo()], this.gameProvider.aiPlayer, element.srcElement)
                       this.presentLoading();
-                      setTimeout(() => {
-                        this.turn(this.gameProvider.origBoard[this.generateRandomNo()], this.gameProvider.aiPlayer, element.srcElement)
-                        if(this.emptySquares().length == 0 && this.tie){
-                          this.checkTie();
-                        }
-                        else if  (this.emptySquares().length == 0){
-                          this.checkTie();
-                        }
-                        this.loader.dismiss();
-                      }, 1000);
+                      this.checkTieWhenTic();
                       this.normalGameAITrue = !this.normalGameAITrue
                     }
                 }
@@ -414,6 +370,18 @@ turnClick(id, element){
     }
 }
 
+checkTieWhenTic(){
+  setTimeout(() => {
+    this.aiTrunClick();
+    if(this.emptySquares().length == 0 && this.tie){
+      this.checkTie();
+    }
+    else if  (this.emptySquares().length == 0){
+      this.checkTie();
+    }
+    this.loader.dismiss();
+  }, 1000);
+}
 /*turnClick(id, element) {
 	if (typeof this.gameProvider.origBoard[id] == 'number') {
 		this.turn(id, this.gameProvider.huPlayer, null)
